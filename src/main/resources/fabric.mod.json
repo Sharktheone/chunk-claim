@@ -1,31 +1,48 @@
 {
-  "schemaVersion": 1,
-  "id": "chunkclaim",
-  "version": "${version}",
-  "name": "Chunk claim mod",
-  "description": "A mod that allows players to claim chunks",
-  "authors": [
-    "Shark <sharktheone@proton.me>"
-  ],
-  "contact": {
-    "sources": "https://github.com/Sharktheone/chunk-claim"
-  },
-  "license": "MIT",
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      {
-        "adapter": "kotlin",
-        "value": "com.chunkclaim.ChunkClaim"
-      }
-    ]
-  },
-  "mixins": [],
-  "depends": {
-    "fabricloader": ">=0.15.11",
-    "minecraft": "~1.21",
-    "java": ">=21",
-    "fabric-api": "*",
-    "fabric-language-kotlin": ">=1.11.0+kotlin.2.0.0"
-  }
+	"schemaVersion": 1,
+	"id": "chunks_and_money",
+	"version": "${version}",
+	"name": "chunks_and_money",
+	"description": "Claim chunks and trade with players",
+	"authors": [
+		"Elias Braun <tghd@tghd.email>",
+		"Shark"
+	],
+	"contact": {
+		"sources": "https://github.com/"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/chunks_and_money/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "de.rgbpixl.Chunks_and_money",
+				"adapter": "kotlin"
+			}
+		],
+		"client": [
+			{
+				"value": "de.rgbpixl.Chunks_and_moneyClient",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"chunks_and_money.mixins.json",
+		{
+			"config": "chunks_and_money.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
 }

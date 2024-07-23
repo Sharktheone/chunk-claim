@@ -1,11 +1,10 @@
-// Taken from https://github.com/FabricMC/fabric-example-mod
 pluginManagement {
-    repositories {
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
+	repositories {
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		mavenCentral()
+		gradlePluginPortal()
+	}
 }
