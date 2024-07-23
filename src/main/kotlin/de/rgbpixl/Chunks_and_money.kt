@@ -1,18 +1,20 @@
 package de.rgbpixl
 
 import de.rgbpixl.commands.MoneyCommands
+import de.rgbpixl.database.Database
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import org.slf4j.LoggerFactory
 
 object Chunks_and_money : ModInitializer {
-    private val logger = LoggerFactory.getLogger("chunks_and_money")
+    val logger = LoggerFactory.getLogger("chunks_and_money")
 
 	override fun onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
-		logger.info("Hello Fabric world!")
+		logger.info("Initializing Database")
+		Database.setupDatabase()
+		logger.info("Setuped Database")
+
+		logger.info("Loaded Chunks & Money")
 
 		CommandRegistrationCallback.EVENT.register(MoneyCommands::register)
 	}
