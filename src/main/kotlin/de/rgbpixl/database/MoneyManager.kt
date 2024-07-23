@@ -4,7 +4,7 @@ import java.util.UUID
 
 object MoneyManager {
     fun getMoney(uuid: UUID): Int {
-        Database.getConnection()?.use { conn ->
+        MariaDB.getConnection()?.use { conn ->
             val statement = conn.prepareStatement("SELECT * FROM players WHERE uuid = ?")
             statement.setString(1, uuid.toString())
             val resultSet = statement.executeQuery()
@@ -16,7 +16,7 @@ object MoneyManager {
     }
 
     fun setMoney(uuid: UUID, money: Int) {
-        Database.getConnection()?.use { conn ->
+        MariaDB.getConnection()?.use { conn ->
             val statement = conn.prepareStatement(
                 """
                 INSERT INTO players (uuid, money) VALUES (?, ?)

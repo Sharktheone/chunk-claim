@@ -4,7 +4,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
-object Database {
+object MariaDB {
     private const val URL = "jdbc:mariadb://192.168.178.35:3306/mydatabase"
     private const val USER = "user"
     private const val PASSWORD = "password"

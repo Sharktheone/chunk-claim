@@ -15,25 +15,15 @@
 	"icon": "assets/chunks_and_money/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
+		"server": [
 			{
 				"value": "de.rgbpixl.Chunks_and_money",
-				"adapter": "kotlin"
-			}
-		],
-		"client": [
-			{
-				"value": "de.rgbpixl.Chunks_and_moneyClient",
 				"adapter": "kotlin"
 			}
 		]
 	},
 	"mixins": [
-		"chunks_and_money.mixins.json",
-		{
-			"config": "chunks_and_money.client.mixins.json",
-			"environment": "client"
-		}
+		"chunks_and_money.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.15.11",
