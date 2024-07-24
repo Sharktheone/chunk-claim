@@ -22,9 +22,7 @@
 			}
 		]
 	},
-	"mixins": [
-		"chunks_and_money.mixins.json"
-	],
+	"mixins": [],
 	"depends": {
 		"fabricloader": ">=0.15.11",
 		"minecraft": "~1.21",
