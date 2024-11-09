@@ -14,6 +14,7 @@ base {
 }
 
 repositories {
+	maven { url 'https://repo.william278.net/releases/' }
 }
 
 loom {
@@ -22,7 +23,6 @@ loom {
 	mods {
 		"chunks_and_money" {
 			sourceSet sourceSets.main
-			sourceSet sourceSets.client
 		}
 	}
 
@@ -40,6 +40,15 @@ dependencies {
 
 	// MariaDB connector
 	implementation("org.mariadb.jdbc:mariadb-java-client:2.7.4")
+
+	// Yaml config
+	implementation("org.yaml:snakeyaml:2.0")
+
+	// PapiProxyBridge
+	implementation 'net.william278:papiproxybridge:1.7'
+
+	// Luckperms
+	implementation  'net.luckperms:api:5.4'
 }
 
 processResources {

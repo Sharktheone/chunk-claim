@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "chunks_and_money",
+	"id": "chunksandmoney",
 	"version": "${version}",
 	"name": "chunks_and_money",
 	"description": "This is an example description! Tell everyone what your mod is about!",
@@ -17,15 +17,15 @@
 	"entrypoints": {
 		"server": [
 			{
-				"value": "de.rgbpixl.Chunks_and_money",
+				"value": "de.rgbpixl.Chunksandmoney",
 				"adapter": "kotlin"
 			}
 		]
 	},
 	"mixins": [],
 	"depends": {
-		"fabricloader": ">=0.15.11",
-		"minecraft": "~1.21",
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21.3",
 		"java": ">=21",
 		"fabric-api": "*",
 		"fabric-language-kotlin": "*"

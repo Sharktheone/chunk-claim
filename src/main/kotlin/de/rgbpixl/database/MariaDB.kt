@@ -4,40 +4,43 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
-object MariaDB {
-    private const val URL = "jdbc:mariadb://192.168.178.35:3306/mydatabase"
-    private const val USER = "user"
-    private const val PASSWORD = "password"
+class MariaDB(url: String, port: Int, database: String, private val user: String, private val password: String) {
+    private val con = "jdbc:mariadb://$url:$port/$database"
 
-    init {
+    fun getDatabaseConnection(): Connection? {
         try {
-            Class.forName("org.mariadb.jdbc.Driver")
-        } catch (e: ClassNotFoundException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun getConnection(): Connection? {
-        return try {
-            DriverManager.getConnection(URL, USER, PASSWORD)
+            return DriverManager.getConnection(con, user, password)
         } catch (e: SQLException) {
             e.printStackTrace()
-            null
+            return null
         }
     }
 
-    fun setupDatabase() {
-        getConnection()?.use { connection ->
-            connection.createStatement().use { statement ->
-                statement.executeUpdate(
-                    """
-                    CREATE TABLE IF NOT EXISTS players (
-                        uuid VARCHAR(36) NOT NULL PRIMARY KEY,
-                        money INTEGER NOT NULL
-                    );
-                    """
-                )
-            }
-        }
+    fun setupDatabase(db: Connection?) {
+        val moneyTable = db?.createStatement()
+        moneyTable?.execute(
+            """
+            CREATE TABLE IF NOT EXISTS players (
+                uuid VARCHAR(36) PRIMARY KEY,
+                money INT
+            );
+            """
+        )
+        moneyTable?.close()
+
+        val teamsTable = db?.createStatement()
+        teamsTable?.execute(
+            """
+            CREATE TABLE IF NOT EXISTS teams (
+                name VARCHAR(255) PRIMARY KEY NOT NULL,
+                color VARCHAR(7),
+                owner VARCHAR(36),
+                members JSON,
+                FOREIGN KEY (owner) REFERENCES players(uuid)
+            );
+            """
+        )
+        teamsTable?.close()
     }
+
 }
