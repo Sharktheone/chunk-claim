@@ -1,6 +1,7 @@
 package de.rgbpixl
 
 import de.rgbpixl.commands.MoneyCommands
+import de.rgbpixl.commands.TeamCommands
 import de.rgbpixl.database.MariaDB
 import de.rgbpixl.utils.ConfigManager
 import de.rgbpixl.utils.PapiProxyBridgeManager
@@ -36,14 +37,19 @@ object Chunksandmoney : DedicatedServerModInitializer {
 		logger.info("Setup database complete")
 		// SQLite
 
-
 		// Commands
 		CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
 			MoneyCommands(this.db).register(dispatcher)
 		})
 
+		CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
+			TeamCommands(this.db).register(dispatcher)
+		})
+
 		// Thinks we want to do, after the server is online
-		ServerLifecycleEvents.SERVER_STARTED.register{ _ -> this.onEnable() }
+		ServerLifecycleEvents.SERVER_STARTED.register{ _ ->
+			this.onEnable()
+		}
 
 		// If we need to unload stuff
 		ServerLifecycleEvents.SERVER_STOPPED.register{ _ -> this.onDisable() }
@@ -78,6 +84,7 @@ object Chunksandmoney : DedicatedServerModInitializer {
 			if (result.next()) {
 				logger.info("Player ${handler.player.name.string} exists in database")
 			}
+			return
 		}
 		checkIfPlayerExists?.close()
 

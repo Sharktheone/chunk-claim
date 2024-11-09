@@ -17,30 +17,31 @@ class MariaDB(url: String, port: Int, database: String, private val user: String
     }
 
     fun setupDatabase(db: Connection?) {
-        val moneyTable = db?.createStatement()
-        moneyTable?.execute(
-            """
-            CREATE TABLE IF NOT EXISTS players (
-                uuid VARCHAR(36) PRIMARY KEY,
-                money INT
-            );
-            """
-        )
-        moneyTable?.close()
-
         val teamsTable = db?.createStatement()
         teamsTable?.execute(
             """
             CREATE TABLE IF NOT EXISTS teams (
-                name VARCHAR(255) PRIMARY KEY NOT NULL,
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                name VARCHAR(255) NOT NULL,
                 color VARCHAR(7),
-                owner VARCHAR(36),
-                members JSON,
-                FOREIGN KEY (owner) REFERENCES players(uuid)
+                owner VARCHAR(36)
             );
             """
         )
         teamsTable?.close()
+
+        val playersTable = db?.createStatement()
+        playersTable?.execute(
+            """
+            CREATE TABLE IF NOT EXISTS players (
+                uuid VARCHAR(36) NOT NULL PRIMARY KEY,
+                money INT,
+                team_id INT,
+                FOREIGN KEY (team_id) REFERENCES teams(id)
+            );
+            """
+        )
+        playersTable?.close()
     }
 
 }
