@@ -35,6 +35,7 @@ class MariaDB(url: String, port: Int, database: String, private val user: String
             """
             CREATE TABLE IF NOT EXISTS players (
                 uuid VARCHAR(36) NOT NULL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
                 money INT,
                 team_id INT,
                 FOREIGN KEY (team_id) REFERENCES teams(id)

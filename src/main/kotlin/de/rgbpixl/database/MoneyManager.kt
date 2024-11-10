@@ -1,12 +1,11 @@
 package de.rgbpixl.database
 
 import java.sql.Connection
-import java.util.UUID
 
 object MoneyManager {
-    fun getMoney(uuid: UUID, db: Connection?): Int {
-        val statement = db?.prepareStatement("SELECT money FROM players WHERE uuid = ?")
-        statement?.setString(1, uuid.toString())
+    fun getMoney(name: String, db: Connection?): Int {
+        val statement = db?.prepareStatement("SELECT money FROM players WHERE name = ?")
+        statement?.setString(1, name)
         val result = statement?.executeQuery()
         if (result != null) {
             if (result.next()) {
@@ -23,16 +22,14 @@ object MoneyManager {
         return 0
     }
 
-    fun setMoney(uuid: UUID, money: Int, db: Connection?) {
+    fun setMoney(name: String, money: Int, db: Connection?) {
         val statement = db?.prepareStatement(
             """
-                INSERT INTO players (uuid, money) VALUES (?, ?)
-                ON DUPLICATE KEY UPDATE money = ?;
+                UPDATE players SET money = ? WHERE name = ?;
             """
         )
-        statement?.setString(1, uuid.toString())
-        statement?.setInt(2, money)
-        statement?.setInt(3, money)
+        statement?.setInt(1, money)
+        statement?.setString(2, name)
         statement?.executeUpdate()
         statement?.close()
     }

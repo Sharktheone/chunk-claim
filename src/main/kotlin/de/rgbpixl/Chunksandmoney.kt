@@ -16,7 +16,7 @@ import java.sql.Connection
 
 object Chunksandmoney : DedicatedServerModInitializer {
 	val logger: Logger = LoggerFactory.getLogger("chunks_and_money")
-	private var db: Connection? = null
+	var db: Connection? = null
 
 	override fun onInitializeServer() {
 		// Config
@@ -47,16 +47,12 @@ object Chunksandmoney : DedicatedServerModInitializer {
 		})
 
 		// Thinks we want to do, after the server is online
-		ServerLifecycleEvents.SERVER_STARTED.register{ _ ->
-			this.onEnable()
-		}
+		ServerLifecycleEvents.SERVER_STARTED.register{ _ -> this.onEnable() }
 
 		// If we need to unload stuff
 		ServerLifecycleEvents.SERVER_STOPPED.register{ _ -> this.onDisable() }
 
-		ServerPlayConnectionEvents.JOIN.register(ServerPlayConnectionEvents.Join { handler, _, _ ->
-			onJoin(handler)
-		})
+		ServerPlayConnectionEvents.JOIN.register{ handler, _, _ -> this.onJoin(handler) }
 	}
 
 	private fun onEnable() {
@@ -76,22 +72,22 @@ object Chunksandmoney : DedicatedServerModInitializer {
 	}
 
 	private fun onJoin(handler: ServerPlayNetworkHandler) {
-		// Checks if player exists in database
-		val checkIfPlayerExists = this.db?.prepareStatement("SELECT * FROM players WHERE uuid = ?")
-		checkIfPlayerExists?.setString(1, handler.player.uuid.toString())
-		val result = checkIfPlayerExists?.executeQuery()
-		if (result != null) {
-			if (result.next()) {
-				logger.info("Player ${handler.player.name.string} exists in database")
-			}
+		// Check if player is already in database
+		val checkPlayer = this.db?.prepareStatement("SELECT * FROM players WHERE uuid = ?;")
+		checkPlayer?.setString(1, handler.player.uuid.toString())
+		val player = checkPlayer?.executeQuery()
+		// If player is already in database, do nothing
+		if (player?.next() == true) {
+			checkPlayer.close()
+			player.close()
 			return
 		}
-		checkIfPlayerExists?.close()
 
 		// Create new player in database
-		val createNewPlayer = this.db?.prepareStatement("INSERT INTO players (uuid, money) VALUES (?, ?)")
+		val createNewPlayer = this.db?.prepareStatement("INSERT INTO players (uuid, name, money) VALUES (?, ?, ?);")
 		createNewPlayer?.setString(1, handler.player.uuid.toString())
-		createNewPlayer?.setInt(2, 0)
+		createNewPlayer?.setString(2, handler.player.name.string)
+		createNewPlayer?.setInt(3, 0)
 		createNewPlayer?.executeUpdate()
 		createNewPlayer?.close()
 	}
