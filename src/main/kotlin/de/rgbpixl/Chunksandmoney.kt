@@ -2,7 +2,7 @@ package de.rgbpixl
 
 import de.rgbpixl.commands.MoneyCommands
 import de.rgbpixl.commands.TeamCommands
-import de.rgbpixl.database.MariaDB
+import de.rgbpixl.database.Postgresql
 import de.rgbpixl.utils.ConfigManager
 import de.rgbpixl.utils.PapiProxyBridgeManager
 import net.fabricmc.api.DedicatedServerModInitializer
@@ -25,7 +25,7 @@ object Chunksandmoney : DedicatedServerModInitializer {
 		// Database
 		// MariaDB
 		logger.info("Initializing database ...")
-		val mariadb = MariaDB(
+		val mariadb = Postgresql(
 			ConfigManager.config.database.host,
 			ConfigManager.config.database.port,
 			ConfigManager.config.database.database,
@@ -40,10 +40,6 @@ object Chunksandmoney : DedicatedServerModInitializer {
 		// Commands
 		CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
 			MoneyCommands(this.db).register(dispatcher)
-		})
-
-		CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
-			TeamCommands(this.db).register(dispatcher)
 		})
 
 		// Thinks we want to do, after the server is online

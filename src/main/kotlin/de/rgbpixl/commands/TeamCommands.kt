@@ -3,11 +3,14 @@ package de.rgbpixl.commands
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
+import de.rgbpixl.database.TeamsManager
 import de.rgbpixl.utils.PlayerSuggestionProvider
 import de.rgbpixl.utils.TeamSuggestionProvider
 import net.luckperms.api.LuckPermsProvider
+import net.minecraft.command.argument.ColorArgumentType
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.text.Text
 import java.sql.Connection
 
 class TeamCommands(private val db: Connection?) {
@@ -17,7 +20,7 @@ class TeamCommands(private val db: Connection?) {
             .then(CommandManager.literal("create")
                 .requires { source -> hasLPPermission(source, "chunksandmoney.team.create") }
                 .then(CommandManager.argument("name", StringArgumentType.string())
-                    .then(CommandManager.argument("color", StringArgumentType.string())
+                    .then(CommandManager.argument("color", ColorArgumentType.color())
                         .executes { ctx -> teamCreate(ctx) })))
 
             // Delete Team
@@ -36,7 +39,7 @@ class TeamCommands(private val db: Connection?) {
             // Change Team Color
             .then(CommandManager.literal("changecolor")
                 .requires { source -> hasLPPermission(source, "chunksandmoney.team.changecolor") }
-                .then(CommandManager.argument("new color", StringArgumentType.string())
+                .then(CommandManager.argument("color", ColorArgumentType.color())
                     .executes { ctx -> teamChangeColor(ctx) }))
 
             // Add Player to Team
@@ -52,6 +55,11 @@ class TeamCommands(private val db: Connection?) {
                 .then(CommandManager.argument("player", StringArgumentType.string())
                     .suggests { ctx, builder -> PlayerSuggestionProvider.getSuggestions(ctx, builder) }
                     .executes { ctx -> teamRemovePlayer(ctx) }))
+
+            // Leave Team
+            .then(CommandManager.literal("leave")
+                .requires { source -> hasLPPermission(source, "chunksandmoney.team.leave") }
+                .executes { ctx -> teamLeave(ctx) })
 
             // Get Team Info
             .then(CommandManager.literal("info")
@@ -99,6 +107,10 @@ class TeamCommands(private val db: Connection?) {
     }
 
     private fun teamRemovePlayer(ctx: CommandContext<ServerCommandSource>): Int {
+        TODO("Not yet implemented")
+    }
+
+    private fun teamLeave(ctx: CommandContext<ServerCommandSource>): Int {
         TODO("Not yet implemented")
     }
 }

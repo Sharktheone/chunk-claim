@@ -4,8 +4,8 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
-class MariaDB(url: String, port: Int, database: String, private val user: String, private val password: String) {
-    private val con = "jdbc:mariadb://$url:$port/$database"
+class Postgresql(url: String, port: Int, database: String, private val user: String, private val password: String) {
+    private val con = "jdbc:postgresql://$url:$port/$database"
 
     fun getDatabaseConnection(): Connection? {
         try {
@@ -21,7 +21,7 @@ class MariaDB(url: String, port: Int, database: String, private val user: String
         teamsTable?.execute(
             """
             CREATE TABLE IF NOT EXISTS teams (
-                id INT PRIMARY KEY AUTO_INCREMENT,
+                id SERIAL PRIMARY KEY ,
                 name VARCHAR(255) NOT NULL,
                 color VARCHAR(7),
                 owner VARCHAR(36)
