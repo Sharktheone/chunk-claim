@@ -1,7 +1,9 @@
 package de.rgbpixl
 
+import de.rgbpixl.commands.ClaimCommands
 import de.rgbpixl.commands.MoneyCommands
 import de.rgbpixl.commands.TeamCommands
+import de.rgbpixl.database.PlayerManager
 import de.rgbpixl.database.Postgresql
 import de.rgbpixl.utils.ConfigManager
 import de.rgbpixl.utils.PapiProxyBridgeManager
@@ -23,8 +25,8 @@ object Chunksandmoney : DedicatedServerModInitializer {
 		ConfigManager.loadConfig()
 
 		// Database
-		// MariaDB
-		logger.info("Initializing database ...")
+		// PostgreSQL
+		logger.info("Initializing PostgreSQL database ...")
 		val mariadb = Postgresql(
 			ConfigManager.config.database.host,
 			ConfigManager.config.database.port,
@@ -34,13 +36,29 @@ object Chunksandmoney : DedicatedServerModInitializer {
 		)
 		this.db = mariadb.getDatabaseConnection()
 		mariadb.setupDatabase(db)
-		logger.info("Setup database complete")
+		logger.info("PostgreSQL database initialized")
+
 		// SQLite
+		//logger.info("Initializing SQLite database ...")
+		//logger.info("SQLite database initialized")
 
 		// Commands
+		logger.info("Registering commands ...")
+		// Money Commands
 		CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
 			MoneyCommands(this.db).register(dispatcher)
 		})
+
+		// Team Commands
+		CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
+			TeamCommands(this.db).register(dispatcher)
+		})
+
+		// Claim Commands
+		CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
+			ClaimCommands(this.db).register(dispatcher)
+		})
+		logger.info("Successfully registered commands")
 
 		// Thinks we want to do, after the server is online
 		ServerLifecycleEvents.SERVER_STARTED.register{ _ -> this.onEnable() }
@@ -69,22 +87,15 @@ object Chunksandmoney : DedicatedServerModInitializer {
 
 	private fun onJoin(handler: ServerPlayNetworkHandler) {
 		// Check if player is already in database
-		val checkPlayer = this.db?.prepareStatement("SELECT * FROM players WHERE uuid = ?;")
-		checkPlayer?.setString(1, handler.player.uuid.toString())
-		val player = checkPlayer?.executeQuery()
-		// If player is already in database, do nothing
-		if (player?.next() == true) {
-			checkPlayer.close()
-			player.close()
-			return
-		}
+		 if (PlayerManager.checkIfPlayerExists(handler.player.uuid.toString(), this.db)) {
+			 // Update player name (If player changed name)
+			 PlayerManager.updateName(handler.player.uuid, handler.player.name.string, this.db)
 
-		// Create new player in database
-		val createNewPlayer = this.db?.prepareStatement("INSERT INTO players (uuid, name, money) VALUES (?, ?, ?);")
-		createNewPlayer?.setString(1, handler.player.uuid.toString())
-		createNewPlayer?.setString(2, handler.player.name.string)
-		createNewPlayer?.setInt(3, 0)
-		createNewPlayer?.executeUpdate()
-		createNewPlayer?.close()
+			 return
+		 } else {
+			// Create new player in database
+			 PlayerManager.createNewPlayer(handler.player.uuid, handler.player.name.string, this.db)
+		 }
 	}
+
 }

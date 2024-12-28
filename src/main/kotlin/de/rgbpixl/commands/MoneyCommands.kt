@@ -16,6 +16,11 @@ import java.sql.Connection
 class MoneyCommands(private val db: Connection?) {
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         dispatcher.register(CommandManager.literal("money")
+            // Get help
+            .then(CommandManager.literal("help")
+                .requires { source -> hasLPPermission(source, "chunksandmoney.money.help")}
+                .executes{ ctx -> moneyHelp(ctx) })
+
             // Get info about the amount of money a player has
             .then(CommandManager.literal("info")
                 .requires { source -> hasLPPermission(source, "chunksandmoney.money.info")}
@@ -47,6 +52,21 @@ class MoneyCommands(private val db: Connection?) {
     private fun hasLPPermission(source: ServerCommandSource, permission: String): Boolean {
         val user = LuckPermsProvider.get().userManager.getUser(source.player!!.uuid) ?: return false
         return user.cachedData.permissionData.checkPermission(permission).asBoolean()
+    }
+
+    // Help command
+    private fun moneyHelp(ctx: CommandContext<ServerCommandSource>): Int {
+        val source = ctx.source
+        source.player!!.sendMessage(Text.literal("Money Commands:"))
+        source.player!!.sendMessage(Text.literal("/money info - Get info about your current balance"))
+        if (hasLPPermission(source, "chunksandmoney.money.infoplayer")) {
+            source.player!!.sendMessage(Text.literal("/money info [player] - Get info about the amount of money a player has"))
+        }
+        if (hasLPPermission(source, "chunksandmoney.money.set")) {
+            source.player!!.sendMessage(Text.literal("/money set [player] [pixls] - Admin command, set the amount of money a player has"))
+        }
+        source.player!!.sendMessage(Text.literal("/money transfer [player] [pixls] - Transfer Money to another player"))
+        return 1
     }
 
     // Get info about the amount of money a player has

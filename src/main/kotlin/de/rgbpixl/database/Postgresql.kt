@@ -43,6 +43,14 @@ class Postgresql(url: String, port: Int, database: String, private val user: Str
             """
         )
         playersTable?.close()
+
+        val noTeam = db?.createStatement()
+        noTeam?.execute(
+            """
+            INSERT INTO teams (id, name, color, owner) VALUES (-1, 'No Team', '#FFFFFF', '00000000-0000-0000-0000-000000000000');
+            """
+        )
+        noTeam?.close()
     }
 
 }
