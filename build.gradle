@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id 'fabric-loom' version '1.9'
+	id 'fabric-loom' version '1.9.2'
 	id 'maven-publish'
 	id "org.jetbrains.kotlin.jvm" version "2.1.0"
 }
@@ -39,13 +39,13 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
 	// MariaDB connector
-	implementation('org.postgresql:postgresql:42.7.2')
+	implementation('org.postgresql:postgresql:42.7.4')
 
 	// Yaml config
-	implementation("org.yaml:snakeyaml:2.0")
+	implementation("org.yaml:snakeyaml:2.3")
 
 	// PapiProxyBridge
-	implementation 'net.william278:papiproxybridge:1.7'
+	implementation 'net.william278:papiproxybridge:1.7.2'
 
 	// Luckperms
 	implementation  'net.luckperms:api:5.4'

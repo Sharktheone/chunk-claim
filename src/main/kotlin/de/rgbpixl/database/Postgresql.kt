@@ -24,6 +24,7 @@ class Postgresql(url: String, port: Int, database: String, private val user: Str
                 id SERIAL PRIMARY KEY ,
                 name VARCHAR(255) NOT NULL,
                 color VARCHAR(7),
+                prefix VARCHAR(255),
                 owner VARCHAR(36)
             );
             """
