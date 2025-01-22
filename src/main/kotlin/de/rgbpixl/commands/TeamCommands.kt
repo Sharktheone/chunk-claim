@@ -17,7 +17,4 @@ class TeamCommands(private val db: Connection?) {
         val user = LuckPermsProvider.get().userManager.getUser(source.player!!.uuid) ?: return false
         return user.cachedData.permissionData.checkPermission(permission).asBoolean()
     }
-
-
-
 }

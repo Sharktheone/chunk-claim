@@ -21,7 +21,7 @@ class Postgresql(url: String, port: Int, database: String, private val user: Str
         teamsTable?.execute(
             """
             CREATE TABLE IF NOT EXISTS teams (
-                id SERIAL PRIMARY KEY ,
+                id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 color VARCHAR(7),
                 prefix VARCHAR(255),
